@@ -118,6 +118,7 @@ async function crossMediaRecommendations(work:Work):Promise<Work[]> {
     if(query) jobs.push(searchBooks(query))
     if(terms.length) jobs.push(searchBooks(terms.slice(0,2).join(' ')))
     if(ids.length) jobs.push(searchBooks((work.genres||[]).slice(0,2).join(' ')))
+    if(ids.length) jobs.push(discoverTMDB(work.kind==='movie'?'tv':'movie',ids))
   }
   const settled=await Promise.allSettled(jobs)
   return uniqueWorks(settled.flatMap(x=>x.status==='fulfilled'?x.value:[]),work.id)
