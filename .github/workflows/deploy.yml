@@ -28,6 +28,14 @@ jobs:
       - name: Extract project
         run: unzip pink-library-iphone.zip -d .
 
+      - name: Add Vite TypeScript declarations
+        run: |
+          mkdir -p pink-library/src
+          cat > pink-library/src/vite-env.d.ts <<'EOF'
+          /// <reference types="vite/client" />
+          declare module '*.css';
+          EOF
+
       - name: Install dependencies
         working-directory: pink-library
         run: npm install
