@@ -24,8 +24,11 @@ jobs:
         with:
           node-version: 22
 
-      - name: Extract project
-        run: unzip -o pink-library-iphone.zip -d .
+      - name: Extract project only on first setup
+        run: |
+          if [ ! -f pink-library/package.json ]; then
+            unzip pink-library-iphone.zip -d .
+          fi
 
       - name: Add Vite TypeScript declarations
         run: |
