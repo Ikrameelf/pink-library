@@ -1,4 +1,3 @@
-
 name: Deploy Pink Library to GitHub Pages
 
 on:
@@ -7,7 +6,7 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: read
+  contents: write
   pages: write
   id-token: write
 
@@ -26,7 +25,7 @@ jobs:
           node-version: 22
 
       - name: Extract project
-        run: unzip pink-library-iphone.zip -d .
+        run: unzip -o pink-library-iphone.zip -d .
 
       - name: Add Vite TypeScript declarations
         run: |
@@ -35,6 +34,16 @@ jobs:
           /// <reference types="vite/client" />
           declare module '*.css';
           EOF
+
+      - name: Save extracted project files to GitHub
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add pink-library
+          if ! git diff --cached --quiet; then
+            git commit -m "Add extracted Pink Library app source"
+            git push origin HEAD:main
+          fi
 
       - name: Install dependencies
         working-directory: pink-library
